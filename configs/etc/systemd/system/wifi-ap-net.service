@@ -1,0 +1,18 @@
+[Unit]
+Description=WiFi AP interface, forwarding, and NAT
+Wants=network-online.target
+After=network-online.target systemd-modules-load.service
+Before=wifi-ap.service wifi-dnsmasq.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+Environment=AP_IF=wlan0
+Environment=AP_CIDR=10.70.2.1/24
+Environment=AP_NET=10.70.2.0/24
+Environment=WAN_IF=eth0
+ExecStart=/usr/local/sbin/wifi-ap-net.sh start
+ExecStop=/usr/local/sbin/wifi-ap-net.sh stop
+
+[Install]
+WantedBy=multi-user.target
