@@ -1,0 +1,13 @@
+[Unit]
+Description=FPT Playbox S335 front-panel LEDs
+After=sysinit.target
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/default/fpt-s335-leds
+ExecStart=/usr/local/sbin/fpt-s335-leds.sh net-watch
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

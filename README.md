@@ -17,7 +17,10 @@ Final verified state:
 - `kernel/ath-regd-qca6174-sdio-channel149.patch`: source patch for the Atheros regulatory module.
 - `kernel/prebuilt/6.18.35-current-meson64/ath.ko`: patched module built for `6.18.35-current-meson64`.
 - `docs/fpt-playbox-s335-wifi-ap.md`: full repair/debug notes.
+- `docs/fpt-playbox-s335-leds.md`: LED GPIO mapping from the Android firmware.
 - `scripts/install-current-kernel.sh`: install the captured working setup on this same kernel.
+- `scripts/fpt-s335-leds.sh`: control the board LED GPIOs through sysfs.
+- `configs/etc/systemd/system/fpt-s335-leds.service`: blinks `sys` and pulses `net` on Ethernet activity.
 
 ## Install On Same Kernel
 
@@ -66,3 +69,19 @@ Expected evidence:
 - capable stations have `[AUTH][ASSOC][AUTHORIZED][WMM][HT][VHT]`
 - dnsmasq has a `10.70.2.x` lease
 - NAT/FORWARD counters increase for `wlan0` and `eth0`
+
+## LEDs
+
+The Android firmware maps the useful front-panel LEDs to `GPIODV_24` and `GPIOAO_5`. On this Linux boot those are sysfs GPIO `596` and `517`; both front-panel LEDs are active-low. `sys` is the red LED and `net` is the white LED.
+
+Run as root:
+
+```sh
+./scripts/fpt-s335-leds.sh status candidates
+./scripts/fpt-s335-leds.sh blink sys
+./scripts/fpt-s335-leds.sh blink net
+```
+
+See `docs/fpt-playbox-s335-leds.md` for the firmware evidence and a future `gpio-leds` device-tree snippet.
+
+The install script also installs and enables `fpt-s335-leds.service`. By default it watches `eth0`, blinks the red `sys` LED with a 1-second on/off cycle, and pulses the white `net` LED on Ethernet activity. Change `/etc/default/fpt-s335-leds` if the Ethernet interface name or blink timing changes.

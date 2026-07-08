@@ -30,13 +30,16 @@ install_file() {
 }
 
 install_file "$ROOT/configs/etc/dnsmasq.d/wifi-ap.conf" /etc/dnsmasq.d/wifi-ap.conf 0644
+install_file "$ROOT/configs/etc/default/fpt-s335-leds" /etc/default/fpt-s335-leds 0644
 install_file "$ROOT/configs/etc/systemd/system/wifi-ap-net.service" /etc/systemd/system/wifi-ap-net.service 0644
 install_file "$ROOT/configs/etc/systemd/system/wifi-ap.service" /etc/systemd/system/wifi-ap.service 0644
 install_file "$ROOT/configs/etc/systemd/system/wifi-dnsmasq.service" /etc/systemd/system/wifi-dnsmasq.service 0644
+install_file "$ROOT/configs/etc/systemd/system/fpt-s335-leds.service" /etc/systemd/system/fpt-s335-leds.service 0644
 install_file "$ROOT/configs/etc/modprobe.d/ath10k-fpt-playbox.conf" /etc/modprobe.d/ath10k-fpt-playbox.conf 0644
 install_file "$ROOT/configs/etc/modules-load.d/ath10k_sdio.conf" /etc/modules-load.d/ath10k_sdio.conf 0644
 install_file "$ROOT/configs/etc/sysctl.d/90-fpt-playbox-ap.conf" /etc/sysctl.d/90-fpt-playbox-ap.conf 0644
 install_file "$ROOT/configs/usr/local/sbin/wifi-ap-net.sh" /usr/local/sbin/wifi-ap-net.sh 0755
+install_file "$ROOT/scripts/fpt-s335-leds.sh" /usr/local/sbin/fpt-s335-leds.sh 0755
 
 install -d /etc/default
 if [ ! -e /etc/default/wifi-ap.env ]; then
@@ -89,9 +92,10 @@ fi
 
 systemctl daemon-reload
 sysctl -w net.ipv4.ip_forward=1 >/dev/null
-systemctl enable wifi-ap-net.service wifi-ap.service wifi-dnsmasq.service
+systemctl enable wifi-ap-net.service wifi-ap.service wifi-dnsmasq.service fpt-s335-leds.service
 systemctl restart wifi-ap-net.service
 systemctl restart wifi-ap.service
 systemctl restart wifi-dnsmasq.service
+systemctl restart fpt-s335-leds.service
 
 hostapd_cli -i wlan0 status || true

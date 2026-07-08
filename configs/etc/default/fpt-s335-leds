@@ -1,0 +1,13 @@
+# FPT Playbox S335 LED service defaults.
+
+# Interface whose RX/TX byte counters drive the net LED.
+FPT_S335_LED_IFACE=eth0
+
+# Poll interval and on-pulse time for network activity blink.
+FPT_S335_LED_POLL=0.25
+FPT_S335_LED_PULSE=0.25
+
+# Red/system LED behavior: on, off, or blink.
+FPT_S335_SYS_MODE=blink
+FPT_S335_SYS_ON=1
+FPT_S335_SYS_OFF=1
